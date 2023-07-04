@@ -31,16 +31,16 @@ function simularPrestamo() {
     // Instancia de la clase Prestamo
     let prestamo = new Prestamo(nombre, monto, plazo, cuotaMensual.toFixed(2));
 
-    prestamos.push(prestamo); // OBJETO AGREGADO Y PUSHEADO
+    prestamos.push(prestamo); // objeto agregado
 
     resultadoElement.textContent = "El monto a pagar mensualmente es: $" + cuotaMensual.toFixed(2);
 
     console.table(prestamos);
 
-    // Guardar el historial de préstamos en localStorage como JSON
+    // Aca estaria guardando el historial de préstamos en localStorage como JSON
     localStorage.setItem("prestamos", JSON.stringify(prestamos));
 
-    // Limpiar los campos de entrada
+    // Limpiando valores de entrada 
     document.getElementById("nombre").value = "";
     document.getElementById("monto").value = "";
     document.getElementById("plazo").value = "";
