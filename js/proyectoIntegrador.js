@@ -1,60 +1,72 @@
 class Prestamo {
     constructor(nombreCompleto, montoSolicitado, plazo, cuotaMensual) {
-        this.nombreCompleto = nombreCompleto;
-        this.montoSolicitado = montoSolicitado;
-        this.plazo = plazo;
-        this.cuotaMensual = cuotaMensual;
+      this.nombreCompleto = nombreCompleto;
+      this.montoSolicitado = montoSolicitado;
+      this.plazo = plazo;
+      this.cuotaMensual = cuotaMensual;
     }
-}
-
-const prestamos = [];
-
-function simularPrestamo() {
+  }
+  
+  const prestamos = [];
+  
+  function simularPrestamo() {
     const resultadoElement = document.getElementById("resultado");
-
+  
     let nombre = document.getElementById("nombre").value;
     let monto = document.getElementById("monto").value;
     let plazo = document.getElementById("plazo").value;
-
+  
     if (!nombre || !monto || !plazo) {
-        resultadoElement.textContent = "No ingresó los datos requeridos";
-        return;
+      resultadoElement.innerHTML = "<p>No ingresó los datos requeridos</p>";
+      return;
     } else if (monto <= 0 || plazo <= 0) {
-        resultadoElement.textContent = "El monto y el plazo deben ser mayores a cero.";
-        return;
+      resultadoElement.innerHTML = "<p>El monto y el plazo deben ser mayores a cero.</p>";
+      return;
     }
-
+  
     let InteresAnual = 0.12;
     let InteresMensual = InteresAnual / 12;
     let cuotaMensual = monto * (InteresMensual / (1 - Math.pow(1 + InteresMensual, -plazo)));
-
-    // Instancia de la clase Prestamo
+  
+  
     let prestamo = new Prestamo(nombre, monto, plazo, cuotaMensual.toFixed(2));
-
-    prestamos.push(prestamo); // objeto agregado
-
-    resultadoElement.textContent = "El monto a pagar mensualmente es: $" + cuotaMensual.toFixed(2);
-
-    console.table(prestamos);
-
+  
+    prestamos.push(prestamo); 
+  
+    resultadoElement.innerHTML = `<p>El monto a pagar mensualmente es: $${cuotaMensual.toFixed(2)}</p>`;
+  
+    // Creamos una tabla con el historial de préstamos
+    let tablaHTML = '<table><thead><tr><th>Nombre</th><th>Monto Solicitado</th><th>Plazo</th><th>Cuota Mensual</th></tr></thead><tbody>';
+    prestamos.forEach(prestamo => {
+      tablaHTML += `<tr><td>${prestamo.nombreCompleto}</td><td>${prestamo.montoSolicitado}</td><td>${prestamo.plazo}</td><td>${prestamo.cuotaMensual}</td></tr>`;
+    });
+    tablaHTML += '</tbody></table>';
+  
+    // Agregando la tabla al DOM
+    document.getElementById("historial").innerHTML = tablaHTML;
+  
     // Aca estaria guardando el historial de préstamos en localStorage como JSON
     localStorage.setItem("prestamos", JSON.stringify(prestamos));
-
-    // Limpiando valores de entrada 
+  
+    // Limpieza de valores de entrada 
     document.getElementById("nombre").value = "";
     document.getElementById("monto").value = "";
     document.getElementById("plazo").value = "";
-}
-
-function cargarHistorial() {
+  }
+  
+  function cargarHistorial() {
     const prestamosGuardados = localStorage.getItem("prestamos");
     if (prestamosGuardados) {
-        const prestamos = JSON.parse(prestamosGuardados);
-        console.table(prestamos);
+      const prestamos = JSON.parse(prestamosGuardados);
+      let tablaHTML = '<table><thead><tr><th>Nombre</th><th>Monto Solicitado</th><th>Plazo</th><th>Cuota Mensual</th></tr></thead><tbody>';
+      prestamos.forEach(prestamo => {
+        tablaHTML += `<tr><td>${prestamo.nombreCompleto}</td><td>${prestamo.montoSolicitado}</td><td>${prestamo.plazo}</td><td>${prestamo.cuotaMensual}</td></tr>`;
+      });
+      tablaHTML += '</tbody></table>';
+      document.getElementById("historial").innerHTML = tablaHTML;
     } else {
-        console.log("No se encontró historial de préstamos.");
+      document.getElementById("historial").innerHTML = "<p>No se encontró historial de préstamos.</p>";
     }
-}
-
-document.getElementById("simular").addEventListener("click", simularPrestamo);
-
+  }
+  
+  document.getElementById("simular").addEventListener("click", simularPrestamo);
